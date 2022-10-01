@@ -1,0 +1,54 @@
+---
+title: "overview"
+format: html
+editor: visual
+---
+
+## Load data
+
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+presence <- read_csv("data/presence.csv")
+```
+
+## Descriptive statistics
+
+Distribution of names
+
+```{r}
+  presence %>%
+    group_by(person) %>%
+    ggplot(aes(x=fct_infreq(person))) + geom_histogram(stat="count") +
+    scale_y_log10()
+```
+
+## Plots
+
+```{r}
+
+book_palette <- tribble(
+  ~name, ~color,
+  "Amma", "#086DB7",
+  "Yaz", "#151358",
+  "Dominique", "#FEC305",
+  "Carole", "#060605",
+  "Bummi", "#F68E8D",
+  "LaTisha", "#085BAE",
+  "Shirley", "#9E3D38",
+  "Winsome", "#5C3248",
+  "Penelope", "#232989",
+  "Megan/Morgan", "#931416",
+  "Hattie", "#D76956",
+  "Grace", "#E63F0A"
+)
+
+
+main <- c("Amma","Yazz", "Dominique", "Carole", "Bummi", "LaTisha", "Shirley",   "Winsome", "Penelope", "Megan/Morgan", "Hattie", "Grace")
+presence %>% 
+     mutate(chapter=if_else(person %in% main, person, "Other")) %>%  
+ggplot(aes(y=person, x=page)) + geom_tile(aes(fill=chapter)) + geom_vline(xintercept = c(1,41,75,113,150,189,217,249,276,307,341,372,405,439))
+```
