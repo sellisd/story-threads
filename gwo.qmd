@@ -19,6 +19,8 @@ presence <- read_csv("data/presence.csv",  col_types = cols(person = col_factor(
 
 ### Distribution of names
 
+-   Number of individuals (people including their pets) `r n_distinct(presence$person)`
+
 Few names are mentioned in many pages and many names are mentioned in very few pages. The distribution is close to an exponential.
 
 ```{r}
