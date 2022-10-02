@@ -12,28 +12,34 @@ library(tidyverse)
 ```
 
 ```{r}
-presence <- read_csv("data/presence.csv")
+presence <- read_csv("data/presence.csv",  col_types = cols(person = col_factor()))
 ```
 
 ## Descriptive statistics
 
-Distribution of names
+### Distribution of names
+
+Few names are mentioned in many pages and many names are mentioned in very few pages. The distribution is close to an exponential.
 
 ```{r}
   presence %>%
     group_by(person) %>%
-    ggplot(aes(x=fct_infreq(person))) + geom_histogram(stat="count") +
-    scale_y_log10()
+    ggplot(aes(x=fct_lump_n(person, 10))) + geom_histogram(stat="count")
+presence %>%   
+ggplot(aes(x=fct_infreq(person))) + geom_histogram(stat="count") + scale_y_log10()
+
 ```
 
-## Plots
+### Story thread
+
+The story is weaved by independent threads, each a story of a different person that are all somehow related.
 
 ```{r}
 
 book_palette <- tribble(
   ~name, ~color,
   "Amma", "#086DB7",
-  "Yaz", "#151358",
+  "Yazz", "#151358",
   "Dominique", "#FEC305",
   "Carole", "#060605",
   "Bummi", "#F68E8D",
@@ -43,12 +49,17 @@ book_palette <- tribble(
   "Penelope", "#232989",
   "Megan/Morgan", "#931416",
   "Hattie", "#D76956",
-  "Grace", "#E63F0A"
+  "Grace", "#E63F0A",
+  "Other", "grey"
 )
 
-
-main <- c("Amma","Yazz", "Dominique", "Carole", "Bummi", "LaTisha", "Shirley",   "Winsome", "Penelope", "Megan/Morgan", "Hattie", "Grace")
 presence %>% 
-     mutate(chapter=if_else(person %in% main, person, "Other")) %>%  
-ggplot(aes(y=person, x=page)) + geom_tile(aes(fill=chapter)) + geom_vline(xintercept = c(1,41,75,113,150,189,217,249,276,307,341,372,405,439))
+  mutate(person=fct_other(person, keep=book_palette$name)) %>%
+  mutate(person = fct_relevel(person,book_palette$name)) %>% 
+  mutate(person = fct_rev(person))%>% 
+  ggplot(aes(y=person, x=page)) + 
+  geom_tile(aes(fill=person, linetype="blank"), show.legend = FALSE) +
+  geom_vline(xintercept = c(1,41,75,113,150,189,217,249,276,307,341,372,405,439,453), color="grey40", linetype="dotted") +
+  scale_fill_manual(values=c("grey", book_palette$color)) +
+  theme_minimal()
 ```
