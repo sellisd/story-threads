@@ -1,6 +1,6 @@
 ---
 title: "A visual data analysis of the book *Girl, Woman, Other* by Bernardine Evaristo"
-format: html
+format: gfm
 editor: source
 editor_options: 
   chunk_output_type: console
