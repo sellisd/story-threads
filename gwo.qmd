@@ -19,7 +19,7 @@ presence <- read_csv("data/presence.csv",  col_types = cols(person = col_factor(
 
 ### Distribution of names
 
--   Number of individuals (people including their pets) `r n_distinct(presence$person)`
+Number of individuals (people including their pets) `r n_distinct(presence$person)`
 
 Few names are mentioned in many pages and many names are mentioned in very few pages. The distribution is close to an exponential.
 
@@ -63,5 +63,5 @@ presence %>%
   geom_tile(aes(fill=person, linetype="blank"), show.legend = FALSE) +
   geom_vline(xintercept = c(1,41,75,113,150,189,217,249,276,307,341,372,405,439,453), color="grey40", linetype="dotted") +
   scale_fill_manual(values=c("grey", book_palette$color)) +
-  theme_minimal()
+  theme_classic()
 ```
